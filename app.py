@@ -1,5 +1,5 @@
 import sys, os, sqlite3, datetime, bottle, pytz, logging
-sys.path.insert(0,'/home/dhiester/webapps/pygtmt/lib/python2.7')
+#sys.path.insert(0,'/home/dhiester/webapps/pygtmt/lib/python2.7')
 
 from bottle import route, default_app, run, template, static_file, request, post, get
 from beaker.middleware import SessionMiddleware
@@ -8,7 +8,7 @@ from pytz import timezone
 
 #Global blog preferences
 class gcmt:
-    path = '/home/dhiester/webapps/pygtmt/'
+    path = '/home/dhiester/Sites/pygcmt/'
     timezone = 'US/Eastern'
     timeformat = "%Y-%m-%d @ %I:%M%p"
     utcformat = "%Y-%m-%d %H:%M:%S:%f"
@@ -186,10 +186,12 @@ def posts():
 
 @route('/javascripts/<filepath:path>')
 def javascripts(filepath):
-    return static_file(filepath, root='/home/dhiester/webapps/pygtmt/javascripts')
+    return static_file(filepath, root='/home/dhiester/Sites/pygcmt/javascripts')
 
 @route('/stylesheets/<filename>')
 def scripts(filename):
-    return static_file(filename, root='/home/dhiester/webapps/pygtmt/stylesheets')
+    return static_file(filename, root='/home/dhiester/Sites/pygcmt/stylesheets')
 
-application = app
+#application = app # Use this line for mod_wsgi
+
+run(app, host='localhost', port=8080) # use this line for built-in server

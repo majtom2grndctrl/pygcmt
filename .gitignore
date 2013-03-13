@@ -1,0 +1,11 @@
+apache2
+bin
+cork_conf
+javascripts/lib/dojo
+javascripts/lib/dijit
+javascripts/lib/dojox
+lib
+gems
+htdocs
+stylesheets
+.sass-cache

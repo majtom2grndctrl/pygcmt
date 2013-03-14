@@ -1,7 +1,6 @@
 define([
-    "dojo/dom", "dojo/query", "dojo/dom-construct", "dojo/request", "dojo/json", "dojo/_base/array", "dojo/on", "dojox/validate"
-], function(dom, query, domConstruct, request, json, arrayUtil, on, validate) {
-    var oldText = {};
+    "dojo/dom", "dojo/query", "dojo/dom-construct", "dojo/request", "dojo/json", "dojo/_base/array", "dojo/on", "dojox/validate", "dojo/html"
+], function(dom, query, domConstruct, request, json, arrayUtil, on, validate, html) {
 
     return {
 
@@ -26,14 +25,9 @@ define([
                         }, sidebarList);
 
                         on(dom.byId("sidebar-nav-id-" + post.id), "click", function(evt) { 
-/* WAT
-                            require(["gcmt/manage"], function(manage) {
-                                manage.loadEditor();
-                            });*/
-                            domConstruct.empty(dom.byId("gcmtMainWorkspaceContainer"));
                             request("/manage/blogposts/editor").then(
                                 function(editor) {
-                                    domConstruct.place();
+                                    html.set(dom.byId("gcmtMainWorkspaceContainer"), editor, { parseContent: true });
                                 }
                             );
                         });

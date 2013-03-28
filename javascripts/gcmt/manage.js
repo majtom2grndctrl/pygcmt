@@ -2,18 +2,20 @@ define([
     "dojo/dom", "dojo/query", "dojo/dom-construct", "dojo/request", "dojo/json", "dojo/_base/array", "dojo/on", "dojox/validate", "dojo/html"
 ], function(dom, query, domConstruct, request, json, arrayUtil, on, validate, html) {
 
+    var loadFunction = {};
+
     return {
 
         pageInit: function() {
             domConstruct.destroy(dom.byId("gcmt-JsRequired"));
             this.loadNavBar(0);
+            loadFunction = this.loadEditor;
+//            console.log("loadFunction defined");
         },
 
         loadNavBar: function(page) {
             var sidebarList = dom.byId("gcmtMainSidebarList");
-            var destroyFunction = function() {
-                manage.destroyEditor();
-            }
+
             request("/manage/blogposts/json/" + page).then(
                 function(response) {
                     jsonObject = JSON.parse(response);
@@ -24,12 +26,8 @@ define([
                             id: "sidebar-nav-id-" + post.id
                         }, sidebarList);
 
-                        on(dom.byId("sidebar-nav-id-" + post.id), "click", function(evt) { 
-                            request("/manage/blogposts/editor").then(
-                                function(editor) {
-                                    html.set(dom.byId("gcmtMainWorkspaceContainer"), editor, { parseContent: true });
-                                }
-                            );
+                        on(dom.byId("sidebar-nav-id-" + post.id), "click", function(evt) {
+                            loadFunction(post.id);
                         });
                     console.log(post.id);
                     });
@@ -40,10 +38,12 @@ define([
             );
         },
         loadEditor: function(id) {
-            console.log("Foo");
-        },
-        destroyEditor: function() {
-            domConstruct.empty(dom.byId("gcmtMainWorkspaceContainer"));
+            request("/manage/blogposts/edit/" + id).then(
+                function(editor) {
+                    html.set(dom.byId("gcmtMainWorkspaceContainer"), editor, { parseContent: true });
+                }
+            );
+//            console.log("loadEditor was run");
         },
     };
 });

@@ -89,7 +89,6 @@ def logout():
 @route('/manage/blogposts/json/<page>')
 def json(page=0):
     aaa.require(role='admin', fail_redirect='/manage/login')
-    tz_utc = pytz.timezone('UTC')
 
     offset = page * 10
     conn = sqlite3.connect(gcmt.path + 'gcmt.db', detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -100,6 +99,7 @@ def json(page=0):
 
 	#Change time from UTC to Site timezone
     for result in results:
+        tz_utc = pytz.timezone('UTC')
         utctime = tz_utc.localize(datetime.datetime.fromtimestamp(result['published']))
         result['date'] = utctime.astimezone(timezone(gcmt.timezone)).strftime('%m/%d/%Y')
 
@@ -113,12 +113,28 @@ def json(page=0):
 @route('/manage/blogposts/editor')
 def blogpost_editor():
     aaa.require(role='admin', fail_redirect='/manage/login')
+
     return template('manage.editor')
 
 @route('/manage/blogposts/edit/<id>')
 def blogpost_edit(id):
     aaa.require(role='admin', fail_redirect='/manage/login')
-    return template('manage.editor')
+
+    conn = sqlite3.connect(gcmt.path + 'gcmt.db', detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    c.execute('SELECT * FROM blogpost WHERE id IS ' + id)
+    result = c.fetchone()
+
+    c.close()
+
+    #Change time from UTC to Site timezone
+    tz_utc = pytz.timezone('UTC')
+    utctime = tz_utc.localize(datetime.datetime.fromtimestamp(result['published']))
+    result['date'] = utctime.astimezone(timezone(gcmt.timezone)).strftime('%m/%d/%Y')
+
+    return template('manage.blogposts.edit', post=result)
+#    return str(result)
 
 @route('/manage/blogposts/save', method='POST')
 def save_new_blogpost():

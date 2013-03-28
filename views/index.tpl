@@ -6,5 +6,3 @@
         {{post['content']}}
     </div>
 %end
-
-End.

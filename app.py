@@ -64,7 +64,7 @@ def index(page=0):
         result['date'] = utctime.astimezone(timezone(gcmt.timezone)).strftime(gcmt.timeformat)
 
     c.close()
-    return template('index', blogposts=results)
+    return template('index', blogposts=results, site_title = gcmt.site_title)
 
 @route('/manage')
 def manage():
@@ -138,6 +138,7 @@ def blogpost_edit(id):
 
 @route('/manage/blogposts/save', method='POST')
 def save_new_blogpost():
+    aaa.require(role='admin', fail_redirect='/manage/login')
     try:
         var_now = datetime.datetime.now(timezone('UTC'))
         conn = sqlite3.connect(gcmt.path + 'gcmt.db', detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -148,6 +149,23 @@ def save_new_blogpost():
         return "Success?"
     except Exception, e:
         return "Oops"
+
+@route('/manage/blogposts/save/<id>', method='POST')
+def save_edited_blogpost(id):
+    aaa.require(role='admin', fail_redirect='/manage/login')
+#    try:
+    var_now = datetime.datetime.now(timezone('UTC'))
+    conn = sqlite3.connect(gcmt.path + 'gcmt.db')
+    c = conn.cursor()
+    c.execute("UPDATE blogpost SET title = '"+post_get('title')+"', content='"+post_get('content')+"', excerpt='"+post_get('excerpt')+"' WHERE id="+id+";")
+    conn.commit()
+
+#        conn.close()
+    return "Success?"
+#    except Exception, e:
+#        return "Oops" + post_get('title') + post_get('content')
+
+
 
 @route('/manage/users')
 def manage_accounts():

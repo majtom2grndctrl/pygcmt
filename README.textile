@@ -2,8 +2,8 @@ h1. GrndCtrl2MajTom
 
 h2. (Python version)
 
-Very much a work in progress. External dependencies include:
+Very much a work in progress. Dependencies include:
 
+* Bottle, Pytz, Cork
 * Dojo in Javascripts/lib
 * The SCSS compiler
-* Pytz, Cork

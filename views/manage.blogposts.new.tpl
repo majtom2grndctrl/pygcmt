@@ -1,4 +1,4 @@
-<form method="POST" action="/manage/blogposts/save" id="newBlogPostForm">
+<form method="POST" action="/manage/blogposts/save" id="gcmtBlogPostForm">
     <div class="gcmtIoMain">
 
         <dl class="gcmtIoField gcmtIoTitle " id="title_field">

@@ -157,7 +157,7 @@ def save_edited_blogpost(id):
     var_now = datetime.datetime.now(timezone('UTC'))
     conn = sqlite3.connect(gcmt.path + 'gcmt.db')
     c = conn.cursor()
-    c.execute("UPDATE blogpost SET title = '"+post_get('title')+"', content='"+post_get('content')+"', excerpt='"+post_get('excerpt')+"' WHERE id="+id+";")
+    c.execute("UPDATE blogpost SET title = '"+str(post_get('title'))+"', content='"+post_get('content')+"', excerpt='"+post_get('excerpt')+"' WHERE id = "+id+";")
     conn.commit()
 
 #        conn.close()

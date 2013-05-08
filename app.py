@@ -150,18 +150,18 @@ def save_new_blogpost():
     except Exception, e:
         return "Oops"
 
-@route('/manage/blogposts/save/<id>', method='POST')
-def save_edited_blogpost(id):
+@route('/manage/blogposts/saveEdits', method='POST')
+def save_edited_blogpost():
     aaa.require(role='admin', fail_redirect='/manage/login')
 #    try:
     var_now = datetime.datetime.now(timezone('UTC'))
     conn = sqlite3.connect(gcmt.path + 'gcmt.db')
     c = conn.cursor()
-    c.execute("UPDATE blogpost SET title = '"+str(post_get('title'))+"', content='"+post_get('content')+"', excerpt='"+post_get('excerpt')+"' WHERE id = "+id+";")
+    c.execute("UPDATE blogpost SET title = '"+str(post_get('title'))+"', content='"+post_get('content')+"', excerpt='"+post_get('excerpt')+"' WHERE id = "+post_get('id')+";")
     conn.commit()
 
 #        conn.close()
-    return "Success?"
+    return "Where do you want to go now?"
 #    except Exception, e:
 #        return "Oops" + post_get('title') + post_get('content')
 

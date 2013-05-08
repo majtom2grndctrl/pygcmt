@@ -1,6 +1,6 @@
 define([
-    "dojo/dom", "dojo/query", "dojo/dom-construct", "dojo/request", "dojo/json", "dojo/_base/array", "dojo/on", "dojox/validate", "dojo/html"
-], function(dom, query, domConstruct, request, json, arrayUtil, on, validate, html) {
+    "dojo/dom", "dojo/query", "dojo/dom-construct", "dojo/request", "dojo/json", "dojo/_base/array", "dojo/on", "dojox/validate", "dojo/html", "dojo/dom-form"],
+    function(dom, query, domConstruct, request, json, arrayUtil, on, validate, html, domForm) {
 
     return {
 
@@ -8,14 +8,22 @@ define([
             domConstruct.destroy(dom.byId("gcmt-JsRequired"));
             this.loadNavBar(0);
             loadFunction = this.loadBlogEditor;
-            submitBlogpost = this.submitBlogpost;
 
-// DAN! Turn the following into its own method next time.
-            on(dom.byId("gcmtBlogPostForm"), "submit", function(evt) {
-                console.log("submitBlogpost() was NOT run");
-//                submitBlogpost();
-                return false;
+            var blogPostForm = dom.byId("gcmtBlogPostForm");
+            on(blogPostForm, "submit", function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                request.post("/manage/blogposts/save", {
+                    data: domForm.toObject("gcmtBlogPostForm"),
+                    timeout: 5000
+                }).then(function(response){
+//
+                    alert(response);
+                });
+
             });
+            console.log("Init method completed");
         },
 
         loadNavBar: function(page) {
@@ -48,11 +56,6 @@ define([
                     html.set(dom.byId("gcmtMainWorkspaceContainer"), editor, { parseContent: true });
                 }
             );
-        },
-        submitBlogpost: function() {
-            console.log("submitBlogpost function has been called");
-            var dataObject = new FormData(dom.byId("gcmtBlogPostForm"));
-            return false;
         },
     };
 });

@@ -1,4 +1,4 @@
-<form method="POST" action="/manage/blogposts/save/{{post['id']}}" id="gcmtBlogPostForm">
+<form id="gcmtBlogPostForm">
     <div class="gcmtIoMain">
 
         <dl class="gcmtIoField gcmtIoTitle " id="title_field">
@@ -39,8 +39,8 @@
             </dd>
 
         </dl>
-
-        <input type="submit" value="Publish" id="gcmtBlogPostSubmit" />
+        <input type="hidden" name="id" value="{{post['id']}}" />
+        <button type="submit">Save</button>
 
     </div>
 </form>
